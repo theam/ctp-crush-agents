@@ -10,5 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: docker build -t crush-test .
-      - run: docker run --rm crush-test crush --version
+
+      - name: Prerrequisitos
+        run: sudo apt-get update && sudo apt-get install -y curl ca-certificates gnupg
+
+      - name: Añadir repo de Charm e instalar crush
+        run: |
+          sudo mkdir -p /etc/apt/keyrings
+          curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+          echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+          sudo apt-get update
+          sudo apt-get install -y crush
+
+      - name: Verificar
+        run: crush --version
