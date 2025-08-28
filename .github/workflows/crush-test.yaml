@@ -48,5 +48,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
+          PROMPT_RAW: ${{ github.event.inputs.prompt }}
         run: |
+          echo "PROMPT_RAW=$PROMPT_RAW"
+          PROMPT=$(printf '%b' "$PROMPT_RAW")
           crush run "Read and follow the Standing Orders in CRUSH.md. Task: $PROMPT"
