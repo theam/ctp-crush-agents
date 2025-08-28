@@ -4,6 +4,11 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      prompt:
+        description: "Crush prompt (use \\n for newlines)"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -41,20 +46,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Crush ping
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: crush run "Hi"
-
       - name: Implement + PR via Crush
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          crush run "
-            Create and switch to branch crush/test-pr.
-            Append the exact line 'Crush test' to the end of README.md.
-            Run: git add README.md && git commit -m 'chore: add Crush test line'.
-            Run: git push --set-upstream origin HEAD.
-            Open a PR against main with: gh pr create --fill --base main --title 'Crush test PR' --body 'PR created by Crush'.
-          "
+          crush run "$PROMPT"
