@@ -48,5 +48,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          crush run "$PROMPT"
+        run: crush run "Read and follow the Standing Orders in CRUSH.md. Task: $PROMPT"

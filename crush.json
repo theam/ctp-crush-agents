@@ -1,7 +1,7 @@
 {
     "$schema": "https://charm.land/crush.json",
     "permissions": {
-      "allowed_tools": ["view", "ls", "grep", "edit"]
+      "allowed_tools": ["view", "ls", "grep", "edit", "git", "gh"]
     },
     "providers": {
       "openai": {
@@ -9,7 +9,7 @@
           {
             "id": "gpt-4o-mini",
             "name": "GPT-4o mini",
-            "default_max_tokens": 32
+            "default_max_tokens": 10000
           }
         ]
       }
