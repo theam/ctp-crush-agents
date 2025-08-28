@@ -11,10 +11,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Prerrequisitos
+      - name: Prerequisites
         run: sudo apt-get update && sudo apt-get install -y curl ca-certificates gnupg
 
-      - name: Añadir repo de Charm e instalar crush
+      - name: Configure crush (global)
+        run: |
+          mkdir -p ~/.config/crush
+          cp ./crush.json ~/.config/crush/crush.json
+
+      - name: Add Charm repo and install crush
         run: |
           sudo mkdir -p /etc/apt/keyrings
           curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
@@ -22,5 +27,5 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y crush
 
-      - name: Verificar
+      - name: Verify
         run: crush --version
