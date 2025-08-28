@@ -31,3 +31,9 @@ jobs:
 
       - name: Verify
         run: crush --version
+
+      - name: Crush ping
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: crush run "Hi"
+
