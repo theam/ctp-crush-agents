@@ -1,0 +1,14 @@
+name: test-crush
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-crush:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t crush-test .
+      - run: docker run --rm crush-test crush --version
