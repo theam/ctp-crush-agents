@@ -1,0 +1,19 @@
+name: web-ci
+
+on:
+  push:
+    branches: [ main, "crush/**" ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install deps
+        run: npm ci --prefix web || npm install --prefix web
+      - name: Build
+        run: npm --prefix web run build
