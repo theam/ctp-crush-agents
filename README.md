@@ -37,5 +37,12 @@ This repository is used to validate Crush agent workflows in CI.
 - Dockerfile: Minimal container definition for tasks that require it
 - crush.json: Configuration for the Crush agent test harness
 
+## React Notes
+- React components should remain pure; derive UI from props/state and avoid side effects inside render.
+- Prefer function components with hooks (useState, useEffect, useMemo) over legacy class components.
+- Co-locate component, styles, and tests to improve maintainability; use meaningful prop types.
+- Keys in lists must be stable and unique to prevent unnecessary re-renders and state mismatches.
+- Lift state up only when multiple children need to share it; otherwise keep state local for simplicity.
+
 ## License
 This repository is for testing/demo purposes. Use as-is.
