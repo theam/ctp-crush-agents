@@ -39,6 +39,14 @@ This repo is intentionally simple. Add files and tests as needed for your scenar
 - Linting/formatting: not enforced by default. Add your preferred tools.
 - Testing: add a framework (e.g., pytest, npm test, etc.) according to your language choice.
 
+## React Notes
+
+- React components can be function-based with hooks like useState and useEffect.
+- Prefer composing small, pure components and lifting state up when necessary.
+- Use keys when rendering lists to help React identify elements efficiently.
+- Co-locate component-specific styles and tests alongside the component.
+- For data fetching, consider SWR or React Query; handle loading and error states explicitly.
+
 ## Contribution Guidelines
 
 - Open an issue describing your change
