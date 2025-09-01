@@ -26,6 +26,14 @@ This repository is used to validate Crush’s autonomous software-engineering wo
 - Dockerfile — Container image for running tasks in CI
 - crush.json — Configuration used by Crush tests
 
+## React Notes
+
+- React components are pure functions of props and state; prefer composition over inheritance.
+- Use hooks like useState and useEffect to manage local state and side effects in function components.
+- Keys help React identify which items have changed; use stable, unique keys for lists.
+- Lift state up to the closest common ancestor to keep data flow predictable.
+- For performance, memoize expensive computations with useMemo and event handlers with useCallback when needed.
+
 ## Contribution Guidelines
 
 - Create a feature branch: git switch -c <feature-branch>
