@@ -37,6 +37,13 @@ Install dependencies:
 - Prefer small, incremental changes.
 - Keep CI green; fix failing checks before merging.
 
+### React notes
+- React components are pure functions of props and state.
+- Prefer function components with hooks over class components.
+- Use useEffect for side effects and cleanup to avoid memory leaks.
+- Memoize expensive computations with useMemo and stable callbacks with useCallback.
+- Co-locate component styles and tests next to the component.
+
 Run CI locally (optional):
 - Use the GitHub Actions workflow file as reference: .github/workflows/crush-test.yaml
 - If you add language-specific tooling, include commands here to lint/test/build.
