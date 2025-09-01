@@ -47,6 +47,14 @@ This repo is intentionally simple. Add files and tests as needed for your scenar
 - Ensure CI passes
 - Be mindful not to commit secrets
 
+## React Notes
+
+- React components should be pure functions of props when possible.
+- Prefer hooks (useState, useEffect, useMemo) over class lifecycle methods in modern React.
+- Co-locate component-specific styles and tests with the component for easier maintenance.
+- Use keys when rendering lists to help React identify elements.
+- Lift state up to the nearest common ancestor to avoid prop drilling complexity.
+
 ## License
 
 This repository is provided for testing and demonstration purposes. Add a license if required by your project needs.
