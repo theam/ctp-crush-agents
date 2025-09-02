@@ -1,11 +1,41 @@
-Hello
+# Crush Test Repository
 
-React notes
+This repository is used to validate Crush CI automation and workflows.
+
+## Getting Started
+
+- Prerequisites: Git, GitHub CLI (gh), Docker (optional)
+- Clone: git clone https://github.com/braisgonzalez/crush-test
+- Install: No installation required
+- Run tests: See CI status in GitHub Actions
+
+## Development
+
+- Create feature branches using the convention: feature/<ticket>-<short-slug>
+- Open pull requests to the main branch with a clear title and description
+
+## Project Structure
+
+- .github/workflows: CI workflows
+- Dockerfile: Container setup
+- CRUSH.md: Standing orders for automation
+
+## React Notes
+
 - React is a library for building user interfaces
-- Components can be function or class based, but modern React favors function components with hooks
-- The virtual DOM enables efficient UI updates
-- Props are read-only; state is managed with useState and other hooks
-- Lifting state up helps share data between components
-- useEffect runs side effects; clean up subscriptions to avoid leaks
-- Keys help React identify list items for reconciliation
-- Context provides a way to pass data without prop drilling
+- Components should be small and composable; prefer function components with hooks
+- The virtual DOM enables efficient UI updates and reconciliation
+- Props are read-only; manage local state with useState and side effects with useEffect
+- Keys help React identify list items for reconciliation; keep them stable
+- Context helps avoid prop drilling; use sparingly and colocate providers
+
+## Contributing
+
+- Fork the repo and create a feature branch
+- Make your changes and open a PR
+- Ensure your PR description explains the motivation and changes
+- Follow commit message conventions required by the project
+
+## License
+
+This project is for testing purposes.
