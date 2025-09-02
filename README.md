@@ -8,3 +8,7 @@ Additional notes about React:
 - Prefer composition over inheritance when structuring components.
 - Keep components small and focused; lift state up when needed.
 - Keys help React identify list items; use stable, unique keys.
+- Use React.memo to avoid unnecessary re-renders for pure components.
+- Derive data from props/state instead of duplicating it; avoid derived state when possible.
+- Lazy-load heavy components with React.lazy and Suspense to improve initial load time.
+- Co-locate component styles and tests to keep modules cohesive.
