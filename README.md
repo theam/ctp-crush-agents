@@ -36,6 +36,14 @@ This repository is used to validate Crush’s CI automation and agent workflows.
 - Push your branch: git push --set-upstream origin HEAD
 - Create a PR: gh pr create --fill --base main
 
+## React Notes
+
+- React components should be pure functions of props and state.
+- Use hooks like useState and useEffect for local state and side effects.
+- Prefer composition over inheritance when structuring components.
+- Co-locate component tests and stories with the component for easier maintenance.
+- Keep components small; lift state up when multiple children need to share data.
+
 ## License
 
 This repository is for testing/CI demonstration purposes.
