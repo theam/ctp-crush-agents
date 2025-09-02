@@ -44,6 +44,14 @@ This repository is used to validate Crush’s end-to-end workflows (branching, c
 - Dockerfile: Base container setup (if needed)
 - crush.json: Project metadata for Crush
 
+## React Notes
+
+- React components are typically function-based and use hooks like useState and useEffect.
+- Prop drilling can be reduced with Context API or state libraries like Redux/Zustand.
+- Use keys when rendering lists to help React efficiently reconcile DOM updates.
+- Memoization (React.memo, useMemo, useCallback) can prevent unnecessary re-renders.
+- Error boundaries catch render-time errors in descendant components.
+
 ## License
 
 - If a license is needed, add a LICENSE file and reference it here.
