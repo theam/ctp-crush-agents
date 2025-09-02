@@ -35,6 +35,14 @@ You can also work locally using a similar flow.
 - .github/workflows — CI workflows
 - Dockerfile — Container configuration for CI tasks
 
+## React Notes
+
+- React components should be pure functions of props and state. Prefer function components with hooks over class components for new code.
+- Use useEffect for side effects and cleanup; avoid placing asynchronous logic directly in render paths.
+- Co-locate component styles and tests alongside the component for better maintainability.
+- Lift state up only when multiple components need to share it; otherwise keep state as local as possible.
+- Memoize expensive computations with useMemo and event handlers with useCallback when profiling shows benefits.
+
 ## Contributing
 
 1. Create a new branch off `main`:
