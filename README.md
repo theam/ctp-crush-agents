@@ -28,6 +28,8 @@ This repository is used to validate Crush CI automation and workflows.
 - Props are read-only; manage local state with useState and side effects with useEffect
 - Keys help React identify list items for reconciliation; keep them stable
 - Context helps avoid prop drilling; use sparingly and colocate providers
+- Lift state up only when multiple components need to share it; otherwise keep state local
+- Derive data where possible instead of storing computed values in state to avoid inconsistencies
 
 ## Contributing
 
