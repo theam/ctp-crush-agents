@@ -1,0 +1,49 @@
+name: jira-on-merge
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  move-jira-on-merge:
+    if: ${{ github.event.pull_request.merged == true }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract ISSUE_KEY from PR title/body
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+          BODY="${{ github.event.pull_request.body || '' }}"
+
+          ISSUE_KEY=$(printf '%s\n%s' "$TITLE" "$BODY" | grep -oE '[A-Z][A-Z0-9]+-[0-9]+' | head -n1)
+          if [ -z "$ISSUE_KEY" ]; then
+            echo "No ISSUE_KEY found in PR title/body"; exit 0
+          fi
+          echo "ISSUE_KEY=$ISSUE_KEY" >> $GITHUB_ENV
+          echo "ISSUE_KEY=$ISSUE_KEY"
+
+      - name: Move Jira issue to In Approval
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        run: |
+          TRANSITIONS_JSON=$(curl -sS \
+            -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
+            -H "Accept: application/json" \
+            "$JIRA_BASE_URL/rest/api/3/issue/$ISSUE_KEY/transitions")
+
+          IN_APPROVAL_ID=$(echo "$TRANSITIONS_JSON" | jq -r '.transitions[] | select(.name=="In Approval") | .id' | head -n1)
+
+          if [ -z "$IN_APPROVAL_ID" ] || [ "$IN_APPROVAL_ID" = "null" ]; then
+            echo "No 'In Approval' transition found. Available:"
+            echo "$TRANSITIONS_JSON" | jq -r '.transitions[] | "\(.name) -> \(.id)"'
+            exit 1
+          fi
+
+          curl -sS -X POST \
+            -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data "{\"transition\": {\"id\": \"$IN_APPROVAL_ID\"}}" \
+            "$JIRA_BASE_URL/rest/api/3/issue/$ISSUE_KEY/transitions"
+
+          echo "Moved $ISSUE_KEY to In Approval"
