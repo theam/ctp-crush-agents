@@ -1,6 +1,6 @@
 # AI Agents: Supercharging Software Workflows
 
-AI agents streamline repetitive tasks, freeing humans to focus on high‑impact problems.
+AI agents streamline repetitive tasks, freeing humans to focus on high-impact problems.
 They scale effortlessly, running 24/7 with consistent quality and zero fatigue.
 Agents accelerate delivery by automating testing, integration, and documentation steps.
 They improve decision-making with data-driven insights and instant context retrieval.
