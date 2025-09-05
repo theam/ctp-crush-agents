@@ -57,28 +57,29 @@ jobs:
             echo "No ISSUE_KEY found in PROMPT"; exit 0
           fi
           echo "ISSUE_KEY=$ISSUE_KEY"
-          
-          AUTH=$(printf '%s:%s' "$JIRA_EMAIL" "$JIRA_API_TOKEN" | base64)
+
           TRANSITIONS_JSON=$(curl -sS \
-            -H "Authorization: Basic $AUTH" \
+            -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
             -H "Accept: application/json" \
             "$JIRA_BASE_URL/rest/api/3/issue/$ISSUE_KEY/transitions")
-          
+
           TRANSITION_ID=$(echo "$TRANSITIONS_JSON" | jq -r '.transitions[] | select(.name=="In Progress") | .id' | head -n1)
+
           if [ -z "$TRANSITION_ID" ] || [ "$TRANSITION_ID" = "null" ]; then
-            echo "No 'In Progress' transition found. Available:" 
+            echo "No 'In Progress' transition found. Available:"
             echo "$TRANSITIONS_JSON" | jq -r '.transitions[] | "\(.name) -> \(.id)"'
             exit 1
           fi
           echo "TRANSITION_ID=$TRANSITION_ID"
-          
+
           curl -sS -X POST \
-            -H "Authorization: Basic $AUTH" \
+            -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
             -H "Content-Type: application/json" \
             --data "{\"transition\": {\"id\": \"$TRANSITION_ID\"}}" \
             "$JIRA_BASE_URL/rest/api/3/issue/$ISSUE_KEY/transitions"
-          
+
           echo "Moved $ISSUE_KEY to In Progress"
+
 
 #      - name: Implement + PR via Crush
 #        env:
