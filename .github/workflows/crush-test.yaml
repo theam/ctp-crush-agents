@@ -86,34 +86,25 @@ jobs:
             "$JIRA_BASE_URL/rest/api/3/issue/$ISSUE_KEY/transitions"
           echo "Moved $ISSUE_KEY to In Progress"
 
-#      - name: Implement + PR via Crush
-#        env:
-#          GH_TOKEN: ${{ github.token }}
-#          GITHUB_TOKEN: ${{ github.token }}
-#          PROMPT_RAW: ${{ github.event.inputs.prompt }}
-#        run: |
-#          echo "PROMPT_RAW=$PROMPT_RAW"
-#          PROMPT=$(printf '%b' "$PROMPT_RAW")
-#          crush run "Read and follow the Standing Orders in CRUSH.md. Task: $PROMPT"
-#
-#      - name: Move Jira issue to In Review
-#        if: ${{ success() }}
-#        env:
-#          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
-#          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
-#          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-#          PROMPT_RAW: ${{ github.event.inputs.prompt }}
-#        run: |
-#          ISSUE_KEY=$(printf '%b' "$PROMPT_RAW" | sed -n 's/.*STORY_ID:[[:space:]]*\([A-Za-z0-9_-]\+\).*/\1/p')
-#          if [ -z "$ISSUE_KEY" ]; then
-#            echo "No ISSUE_KEY found in PROMPT"; exit 0
-#          fi
-#          echo "ISSUE_KEY=$ISSUE_KEY"
-#
-#          curl -sS -X POST \
-#            -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
-#            -H "Content-Type: application/json" \
-#            --data '{"transition": {"id": "31"}}' \
-#            "$JIRA_BASE_URL/rest/api/3/issue/$ISSUE_KEY/transitions"
-#
-#          echo "Moved $ISSUE_KEY to In Review"
+      - name: Implement + PR via Crush
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          PROMPT_RAW: ${{ github.event.inputs.prompt }}
+        run: |
+          echo "PROMPT_RAW=$PROMPT_RAW"
+          PROMPT=$(printf '%b' "$PROMPT_RAW")
+          crush run "Read and follow the Standing Orders in CRUSH.md. Task: $PROMPT"
+
+      - name: Move Jira issue to In Review
+        if: ${{ success() }}
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        run: |
+          curl -sS -X POST -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data "{\"transition\": {\"id\": \"$IN_REVIEW_ID\"}}" \
+            "$JIRA_BASE_URL/rest/api/3/issue/$ISSUE_KEY/transitions"
+          echo "Moved $ISSUE_KEY to In Review"
