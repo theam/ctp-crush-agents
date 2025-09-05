@@ -44,8 +44,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      - name: Move Jira issue to In Progress
+          
+      - name: Extract ISSUE_KEY and transition IDs
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
@@ -56,30 +56,35 @@ jobs:
           if [ -z "$ISSUE_KEY" ]; then
             echo "No ISSUE_KEY found in PROMPT"; exit 0
           fi
-          echo "ISSUE_KEY=$ISSUE_KEY"
+          echo "ISSUE_KEY=$ISSUE_KEY" >> $GITHUB_ENV
 
-          TRANSITIONS_JSON=$(curl -sS \
-            -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
+          TRANSITIONS_JSON=$(curl -sS -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
             -H "Accept: application/json" \
             "$JIRA_BASE_URL/rest/api/3/issue/$ISSUE_KEY/transitions")
 
-          TRANSITION_ID=$(echo "$TRANSITIONS_JSON" | jq -r '.transitions[] | select(.name=="In Progress") | .id' | head -n1)
-
-          if [ -z "$TRANSITION_ID" ] || [ "$TRANSITION_ID" = "null" ]; then
-            echo "No 'In Progress' transition found. Available:"
-            echo "$TRANSITIONS_JSON" | jq -r '.transitions[] | "\(.name) -> \(.id)"'
-            exit 1
+          IN_PROGRESS_ID=$(echo "$TRANSITIONS_JSON" | jq -r '.transitions[] | select(.name=="In Progress") | .id' | head -n1)
+          if [ -z "$IN_PROGRESS_ID" ] || [ "$IN_PROGRESS_ID" = "null" ]; then
+            echo "No 'In Progress' transition found"; exit 1
           fi
-          echo "TRANSITION_ID=$TRANSITION_ID"
+          echo "IN_PROGRESS_ID=$IN_PROGRESS_ID" >> $GITHUB_ENV
 
-          curl -sS -X POST \
-            -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
+          IN_REVIEW_ID=$(echo "$TRANSITIONS_JSON" | jq -r '.transitions[] | select(.name=="In Review") | .id' | head -n1)
+          if [ -z "$IN_REVIEW_ID" ] || [ "$IN_REVIEW_ID" = "null" ]; then
+            echo "No 'In Review' transition found"; exit 1
+          fi
+          echo "IN_REVIEW_ID=$IN_REVIEW_ID" >> $GITHUB_ENV
+
+      - name: Move Jira issue to In Progress
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        run: |
+          curl -sS -X POST -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
             -H "Content-Type: application/json" \
-            --data "{\"transition\": {\"id\": \"$TRANSITION_ID\"}}" \
+            --data "{\"transition\": {\"id\": \"$IN_PROGRESS_ID\"}}" \
             "$JIRA_BASE_URL/rest/api/3/issue/$ISSUE_KEY/transitions"
-
           echo "Moved $ISSUE_KEY to In Progress"
-
 
 #      - name: Implement + PR via Crush
 #        env:
@@ -90,3 +95,25 @@ jobs:
 #          echo "PROMPT_RAW=$PROMPT_RAW"
 #          PROMPT=$(printf '%b' "$PROMPT_RAW")
 #          crush run "Read and follow the Standing Orders in CRUSH.md. Task: $PROMPT"
+#
+#      - name: Move Jira issue to In Review
+#        if: ${{ success() }}
+#        env:
+#          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+#          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+#          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+#          PROMPT_RAW: ${{ github.event.inputs.prompt }}
+#        run: |
+#          ISSUE_KEY=$(printf '%b' "$PROMPT_RAW" | sed -n 's/.*STORY_ID:[[:space:]]*\([A-Za-z0-9_-]\+\).*/\1/p')
+#          if [ -z "$ISSUE_KEY" ]; then
+#            echo "No ISSUE_KEY found in PROMPT"; exit 0
+#          fi
+#          echo "ISSUE_KEY=$ISSUE_KEY"
+#
+#          curl -sS -X POST \
+#            -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
+#            -H "Content-Type: application/json" \
+#            --data '{"transition": {"id": "31"}}' \
+#            "$JIRA_BASE_URL/rest/api/3/issue/$ISSUE_KEY/transitions"
+#
+#          echo "Moved $ISSUE_KEY to In Review"
