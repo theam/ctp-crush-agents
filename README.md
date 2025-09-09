@@ -1,5 +1,0 @@
-- React is a JavaScript library for building user interfaces with components.
-- It uses a virtual DOM to efficiently update the UI based on state changes.
-- JSX lets you write markup-like syntax that compiles to React.createElement calls.
-- Hooks (like useState and useEffect) enable state and side effects in function components.
-- React’s ecosystem includes React Router, Redux, and tooling like Vite and Next.js.
