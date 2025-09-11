@@ -5,6 +5,7 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "append:readme": "node ./scripts/append-random-to-readme.mjs"
   }
 }
